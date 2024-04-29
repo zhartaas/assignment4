@@ -40,15 +40,14 @@ func main() {
 	insertTask("finish assignment3", false)
 	insertTask("finish assignment2", true)
 
-	// Test caching logic
 	fmt.Println("First request:")
-	getTaskByID(1) // This should query the database and cache the result
+	getTaskByID(1)
 
 	fmt.Println("Second request:")
-	getTaskByID(1) // This should retrieve the result from the cache
+	getTaskByID(1)
 
 	fmt.Println("Third request:")
-	getTaskByID(2) // This should query the database as the result is not cached
+	getTaskByID(2)
 }
 
 func taskCompleted(id int) {
@@ -133,7 +132,6 @@ func getTaskByID(id int) *Task {
 		}
 	}
 
-	// Task not found in cache, query the database
 	var task Task
 	err = db.Get(&task, "SELECT * FROM tasks WHERE id = $1", id)
 	if err != nil {
@@ -141,7 +139,6 @@ func getTaskByID(id int) *Task {
 		return nil
 	}
 
-	// Cache the task
 	taskJSON, err := json.Marshal(task)
 	if err != nil {
 		log.Println("Error encoding task to JSON:", err)
